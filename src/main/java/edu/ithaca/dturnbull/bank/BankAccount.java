@@ -42,6 +42,11 @@ public class BankAccount {
     public static boolean isEmailValid(String email){
         Boolean valid = true;
         String prefix = email.split("@")[0].toString();
+
+        if (prefix.startsWith(".") || prefix.startsWith("!") || prefix.startsWith("#") || prefix.startsWith("'")) {
+            return false;
+        }
+
         if (prefix.endsWith("-")) {
             return false;
         }
@@ -56,7 +61,12 @@ public class BankAccount {
 
         //check domain
         String domain = email.split("@")[1].toString();
-        if (domain.contains("#")) {
+        String domainLastPortion = domain.split("\\.")[1].toString();
+        if (domain.contains("#") || domain.contains("'")) {
+            return false;
+        }
+
+        if (domainLastPortion.length() < 2) {
             return false;
         }
 
