@@ -31,11 +31,22 @@ class BankAccountTest {
     void isEmailValidTest(){
         assertTrue(BankAccount.isEmailValid( "a@b.com")); // Valid Email Address
         assertFalse( BankAccount.isEmailValid("")); //Empty String
+        
+        //@ symbol 
+        assertFalse(BankAccount.isEmailValid("ab@c@mail.com"));
+        assertFalse(BankAccount.isEmailValid("abcmail.com"));
+        assertFalse(BankAccount.isEmailValid("abc@"));
+        assertFalse(BankAccount.isEmailValid("@mail.com"));
+
+        //Special Characters
         assertFalse(BankAccount.isEmailValid("abc-@mail.com")); // No special characters are permitted just before the @ symbol
         assertFalse(BankAccount.isEmailValid("abc#def@mail.com")); // The character # is not permitted in a valid email address before the @ 
         assertFalse(BankAccount.isEmailValid("abc.def@mail'archive.com")); // The character ' is not permitted in a valid email address after the @
+        
+        //Domain Suffix
         assertFalse(BankAccount.isEmailValid("abcd@mail.c")); // There must be two characters in the suffix of the domain
         assertTrue(BankAccount.isEmailValid("abcd@mail.cc")); // Valid Email Address
+        
         assertTrue(BankAccount.isEmailValid( "abc_def@mail.com")); // Valid Email Address
         assertFalse(BankAccount.isEmailValid(".abcd@mail.com")); // Cannot start with a special character
 
