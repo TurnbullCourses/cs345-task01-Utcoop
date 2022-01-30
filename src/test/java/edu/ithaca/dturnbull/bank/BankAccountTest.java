@@ -18,11 +18,17 @@ class BankAccountTest {
     void withdrawTest() throws InsufficientFundsException{
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
         bankAccount.withdraw(100);
-
         assertEquals(100, bankAccount.getBalance(), 0.001);
+        //Overdrawn
         assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
-
+        
+        //Negative number withdrawn
         assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(-5000));
+        
+        //Too many decimal places
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(10.111));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(100.000));
+        //Balance does not change when an excepetion is thrown
         assertEquals(100, bankAccount.getBalance());
 
     }
@@ -60,6 +66,8 @@ class BankAccountTest {
         assertEquals(200, bankAccount.getBalance(), 0.001);
         //check for exception thrown correctly
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 100));
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", 100.000));
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", -100.00));
     }
 
     @Test
