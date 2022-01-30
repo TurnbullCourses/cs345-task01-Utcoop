@@ -1,4 +1,5 @@
 package edu.ithaca.dturnbull.bank;
+import java.lang.Math;
 
 public class BankAccount {
 
@@ -35,23 +36,37 @@ public class BankAccount {
      * @post reduces the balance by amount if amount is non-negative and smaller than balance
      */
     public void withdraw (double amount) throws InsufficientFundsException{
-        if (!isNumberValid(amount)) {
+        if (isNumberValid(amount)) {    
+            if (amount <= balance){
+                balance -= amount;
+                balance = Math.round(balance * 100.0) / 100.0;
+            }
+            else {
+                throw new InsufficientFundsException("Not enough money");
+            }
+        }else{
             throw new IllegalArgumentException("Amount to withdraw is invalid");
-        }
-        if (amount <= balance){
-            balance -= amount;
-        }
-        else {
-            throw new InsufficientFundsException("Not enough money");
         }
     }
     
-    public void transfer(double amount, BankAccount account){
-
+    public void transfer(double amount, BankAccount account) throws InsufficientFundsException{
+        if(isNumberValid(amount)){
+            withdraw(amount);
+            account.deposit(amount);
+        }
+        else{
+            throw new IllegalArgumentException("Amount to withdraw is invalid");
+        }
     }
 
     public void deposit(double amount){
-
+        if(isNumberValid(amount)){
+            balance+=amount;
+            balance = Math.round(balance * 100.0) / 100.0;
+        }
+        else{
+            throw new IllegalArgumentException("Amount to deposit is invalid");
+        }
     }
 
     public static boolean isEmailValid(String email){
@@ -119,7 +134,6 @@ public class BankAccount {
         String numString = Double.toString(num);
         int decimalIndex = numString.indexOf(".");
         int decimalPlaces = numString.length() - decimalIndex - 1;
-        System.out.print(decimalPlaces + " "+ decimalIndex+" "+ numString +"\n");
         if(decimalPlaces>2){
             return false;
         }
