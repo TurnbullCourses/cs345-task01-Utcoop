@@ -47,13 +47,23 @@ public class BankAccount {
         Boolean valid = true;
         String prefix = email.split("@")[0].toString();
 
+        
+
+        if (prefix == "") {
+            return false;
+        }
+
         if (prefix.startsWith(".") || prefix.startsWith("!") || prefix.startsWith("#") || prefix.startsWith("'")) {
+            return false;
+        }
+
+        if (prefix.contains("@")) {
             return false;
         }
 
         if (prefix.endsWith("-")) {
             return false;
-        }
+        }        
 
         if (prefix.contains("#")) {
             return false;
@@ -63,8 +73,25 @@ public class BankAccount {
             return false;
         } 
 
+        if (email.endsWith("@")) {
+            return false;
+        }
+
         //check domain
         String domain = email.split("@")[1].toString();
+
+        if (!domain.contains(".")) {
+            return false;
+        }
+
+        if (domain.contains("@")) {
+            return false;
+        }
+
+        if (domain == "") {
+            return false;
+        }
+        
         String domainLastPortion = domain.split("\\.")[1].toString();
         if (domain.contains("#") || domain.contains("'")) {
             return false;
@@ -76,8 +103,14 @@ public class BankAccount {
 
         return valid;
     }
+<<<<<<< HEAD
     public static boolean isNumberValid(double num){
         return false;
     }
 
 }
+=======
+}
+
+
+>>>>>>> c099571e83c5f161dc2ba87e56b27c272d4e8f94
