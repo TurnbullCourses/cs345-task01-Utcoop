@@ -19,6 +19,7 @@ class BankAccountTest {
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
         bankAccount.withdraw(100);
         assertEquals(100, bankAccount.getBalance(), 0.001);
+        
         //Overdrawn
         assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
         
@@ -27,9 +28,14 @@ class BankAccountTest {
         
         //Too many decimal places
         assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(10.111));
-        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(100.000));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(100.001));
+        
         //Balance does not change when an excepetion is thrown
         assertEquals(100, bankAccount.getBalance());
+       
+        //Hanging zeros are not accounted for 
+        bankAccount.withdraw(100.000);
+        assertEquals(bankAccount.getBalance(), 0);
 
     }
 
@@ -64,10 +70,21 @@ class BankAccountTest {
 
         assertEquals("a@b.com", bankAccount.getEmail());
         assertEquals(200, bankAccount.getBalance(), 0.001);
+        
         //check for exception thrown correctly
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 100));
-        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", 100.000));
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", 100.001));
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", 100.999));
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", -100.00));
+        
+        //Hanging zeros are not acounted for
+        BankAccount testAccoount1 = new BankAccount("a@b.com", 200.010);
+        assertEquals("a@b.com", testAccoount1.getEmail());
+        assertEquals(200.01, testAccoount1.getBalance(), 0.001);
+
+        BankAccount testAccoount2 = new BankAccount("a@b.com", 200.990);
+        assertEquals("a@b.com", testAccoount2.getEmail());
+        assertEquals(200.99, testAccoount2.getBalance(), 0.001);
     }
 
     @Test
@@ -77,6 +94,7 @@ class BankAccountTest {
         assertTrue(BankAccount.isNumberValid(100.1));
         assertTrue(BankAccount.isNumberValid(100.11));
         assertFalse(BankAccount.isNumberValid(100.111));
+     
         // amount is a positive number
         assertTrue(BankAccount.isNumberValid(10));
         assertFalse(BankAccount.isNumberValid(-10));
