@@ -45,13 +45,18 @@ public class BankAccount {
             throw new InsufficientFundsException("Not enough money");
         }
     }
+    
+    public void transfer(double amount, BankAccount account){
 
+    }
+
+    public void deposit(double amount){
+
+    }
 
     public static boolean isEmailValid(String email){
         Boolean valid = true;
         String prefix = email.split("@")[0].toString();
-
-        
 
         if (prefix == "") {
             return false;

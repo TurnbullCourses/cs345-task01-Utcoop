@@ -24,10 +24,10 @@ class BankAccountTest {
         assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
         
         //Negative number withdrawn
-        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(-5000));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(-100));
         
         //Too many decimal places
-        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(10.111));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(100.999));
         assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(100.001));
         
         //Balance does not change when an excepetion is thrown
@@ -35,7 +35,53 @@ class BankAccountTest {
        
         //Hanging zeros are not accounted for 
         bankAccount.withdraw(100.000);
-        assertEquals(bankAccount.getBalance(), 0);
+        assertEquals(0, bankAccount.getBalance());
+    }
+    @Test
+    void transferTest() throws InsufficientFundsException{
+        BankAccount bankAccountTO = new BankAccount("TO@b.com", 0.00);
+        BankAccount bankAccountFROM = new BankAccount("FROM@b.com", 100.00);
+        assertEquals(0, bankAccountTO.getBalance());
+        assertEquals(100, bankAccountFROM.getBalance());
+
+        assertThrows(IllegalArgumentException.class, () -> bankAccountFROM.transfer(10.999, bankAccountTO));
+        assertThrows(IllegalArgumentException.class, () -> bankAccountFROM.transfer(10.001, bankAccountFROM));
+
+        //Balance doesnot change when an exception is thrown
+        assertEquals(0, bankAccountTO.getBalance());
+        assertEquals(100, bankAccountFROM.getBalance());
+
+        //Transfer completed successfully
+        bankAccountFROM.transfer(10.00, bankAccountTO);
+        assertEquals(10, bankAccountTO.getBalance());
+        assertEquals(90, bankAccountFROM.getBalance());
+
+        //Hanging Zero's are not accounted for
+        bankAccountFROM.transfer(10.010, bankAccountTO);
+        assertEquals(20.01, bankAccountTO.getBalance());
+        assertEquals(79.99, bankAccountFROM.getBalance());
+    }
+
+    @Test
+    void depositTest(){
+        BankAccount bankAccount = new BankAccount("a@b.com", 0.00);
+        bankAccount.deposit(100.00);
+        assertEquals(100, bankAccount.getBalance());
+        
+        //Too many decimal places
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(100.999));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(100.001));
+
+        //Negative values
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-100));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-10));
+
+        //Balance does not change when errors are thrown
+        assertEquals(100, bankAccount.getBalance());
+
+        //Hanging zeros are not accounted for 
+        bankAccount.deposit(100.000);
+        assertEquals(200, bankAccount.getBalance());
 
     }
 
