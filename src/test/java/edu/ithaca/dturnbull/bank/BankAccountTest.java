@@ -62,4 +62,16 @@ class BankAccountTest {
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 100));
     }
 
+    @Test
+    void isNumberValidTest() {
+        // checks to see if a double has two decimals or less
+        assertTrue(BankAccount.isNumberValid(100));
+        assertTrue(BankAccount.isNumberValid(100.1));
+        assertTrue(BankAccount.isNumberValid(100.11));
+        assertFalse(BankAccount.isNumberValid(100.111));
+        // amount is a positive number
+        assertTrue(BankAccount.isNumberValid(10));
+        assertFalse(BankAccount.isNumberValid(-10));
+        assertFalse(BankAccount.isNumberValid(-100));
+    }
 }

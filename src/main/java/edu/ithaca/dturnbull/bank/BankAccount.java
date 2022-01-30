@@ -76,4 +76,8 @@ public class BankAccount {
 
         return valid;
     }
+    public static boolean isNumberValid(double num){
+        return false;
+    }
+
 }
