@@ -103,14 +103,7 @@ public class BankAccount {
 
         return valid;
     }
-<<<<<<< HEAD
     public static boolean isNumberValid(double num){
         return false;
     }
-
 }
-=======
-}
-
-
->>>>>>> c099571e83c5f161dc2ba87e56b27c272d4e8f94
