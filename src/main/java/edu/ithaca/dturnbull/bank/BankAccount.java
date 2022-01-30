@@ -104,6 +104,17 @@ public class BankAccount {
         return valid;
     }
     public static boolean isNumberValid(double num){
-        return false;
+        if (num<0){
+            return false;
+        }
+        String numString = Double.toString(num);
+        int decimalIndex = numString.indexOf(".");
+        int decimalPlaces = numString.length() - decimalIndex - 1;
+        if(decimalPlaces>2){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }
