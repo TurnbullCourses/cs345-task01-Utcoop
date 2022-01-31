@@ -44,6 +44,7 @@ class BankAccountTest {
         assertEquals(0, bankAccountTO.getBalance());
         assertEquals(100, bankAccountFROM.getBalance());
 
+        // Too many decimal places
         assertThrows(IllegalArgumentException.class, () -> bankAccountFROM.transfer(10.999, bankAccountTO));
         assertThrows(IllegalArgumentException.class, () -> bankAccountFROM.transfer(10.001, bankAccountFROM));
 
@@ -124,13 +125,18 @@ class BankAccountTest {
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", -100.00));
         
         //Hanging zeros are not acounted for
-        BankAccount testAccoount1 = new BankAccount("a@b.com", 200.010);
-        assertEquals("a@b.com", testAccoount1.getEmail());
-        assertEquals(200.01, testAccoount1.getBalance(), 0.001);
+        BankAccount testAccount1 = new BankAccount("aa@b.com", 200.010);
+        assertEquals("aa@b.com", testAccount1.getEmail());
+        assertEquals(200.01, testAccount1.getBalance(), 0.001);
 
-        BankAccount testAccoount2 = new BankAccount("a@b.com", 200.990);
-        assertEquals("a@b.com", testAccoount2.getEmail());
-        assertEquals(200.99, testAccoount2.getBalance(), 0.001);
+        BankAccount testAccount2 = new BankAccount("ab@b.com", 200.990);
+        assertEquals("ab@b.com", testAccount2.getEmail());
+        assertEquals(200.99, testAccount2.getBalance(), 0.001);
+
+        // Bank account can be created with no initial balance
+        BankAccount testAccount3 = new BankAccount("ac@b.com", 0);
+        assertEquals("ac@b.com", testAccount3.getEmail());
+        assertEquals(0, testAccount3.getBalance(), 0.001);
     }
 
     @Test
