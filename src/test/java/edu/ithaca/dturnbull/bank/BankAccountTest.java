@@ -134,6 +134,7 @@ class BankAccountTest {
         assertEquals(200.99, testAccount2.getBalance(), 0.001);
 
         // Bank account can be created with no initial balance
+        // Code review suggestion
         BankAccount testAccount3 = new BankAccount("ac@b.com", 0);
         assertEquals("ac@b.com", testAccount3.getEmail());
         assertEquals(0, testAccount3.getBalance(), 0.001);
