@@ -23,17 +23,23 @@ public class BankAccount {
             throw new IllegalArgumentException("Value: " + startingBalance + " is an invalid starting balance, cannot create account");
         }
     }
-
+     /**
+     * @returns balance
+     */
     public double getBalance(){
         return balance;
     }
 
+    /**
+     * @returns email
+     */
     public String getEmail(){
         return email;
     }
 
     /**
      * @post reduces the balance by amount if amount is non-negative and smaller than balance
+     * @throws InsufficientFundsException if balance is less than amount
      */
     public void withdraw (double amount) throws InsufficientFundsException{
         if (isNumberValid(amount)) {    
@@ -49,6 +55,11 @@ public class BankAccount {
         }
     }
     
+    /**
+     * @post reduces the balance by amount if amount is non-negative and smaller 
+     * than balance. Increases the balance of another BankAccount object
+     * @throws InsufficientFundsException if balance is less than amount
+     */
     public void transfer(double amount, BankAccount account) throws InsufficientFundsException{
         if(isNumberValid(amount)){
             withdraw(amount);
@@ -58,7 +69,9 @@ public class BankAccount {
             throw new IllegalArgumentException("Amount to withdraw is invalid");
         }
     }
-
+    /**
+     * @post increases the balance by amount if amount is non-negative 
+     */
     public void deposit(double amount){
         if(isNumberValid(amount)){
             balance+=amount;
@@ -69,6 +82,9 @@ public class BankAccount {
         }
     }
 
+    /**
+     * @post increases the balance by amount if amount is non-negative 
+     */
     public static boolean isEmailValid(String email){
         Boolean valid = true;
         String prefix = email.split("@")[0].toString();

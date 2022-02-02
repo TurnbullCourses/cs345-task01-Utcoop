@@ -152,5 +152,7 @@ class BankAccountTest {
         assertTrue(BankAccount.isNumberValid(10));
         assertFalse(BankAccount.isNumberValid(-10));
         assertFalse(BankAccount.isNumberValid(-100));
+
+
     }
 }
