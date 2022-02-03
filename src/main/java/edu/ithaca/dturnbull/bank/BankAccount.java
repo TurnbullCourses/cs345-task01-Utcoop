@@ -1,4 +1,5 @@
 package edu.ithaca.dturnbull.bank;
+import java.lang.Math;
 
 public class BankAccount {
 
@@ -11,39 +12,148 @@ public class BankAccount {
     public BankAccount(String email, double startingBalance){
         if (isEmailValid(email)){
             this.email = email;
-            this.balance = startingBalance;
         }
         else {
             throw new IllegalArgumentException("Email address: " + email + " is invalid, cannot create account");
         }
+        if(isNumberValid(startingBalance)){
+            this.balance = startingBalance;
+        }
+        else{
+            throw new IllegalArgumentException("Value: " + startingBalance + " is an invalid starting balance, cannot create account");
+        }
     }
-
+     /**
+     * @returns balance
+     */
     public double getBalance(){
         return balance;
     }
 
+    /**
+     * @returns email
+     */
     public String getEmail(){
         return email;
     }
 
     /**
      * @post reduces the balance by amount if amount is non-negative and smaller than balance
+     * @throws InsufficientFundsException if balance is less than amount
      */
     public void withdraw (double amount) throws InsufficientFundsException{
-        if (amount <= balance){
-            balance -= amount;
+        if (isNumberValid(amount)) {    
+            if (amount <= balance){
+                balance -= amount;
+                balance = Math.round(balance * 100.0) / 100.0;
+            }
+            else {
+                throw new InsufficientFundsException("Not enough money");
+            }
+        }else{
+            throw new IllegalArgumentException("Amount to withdraw is invalid");
         }
-        else {
-            throw new InsufficientFundsException("Not enough money");
+    }
+    
+    /**
+     * @post reduces the balance by amount if amount is non-negative and smaller 
+     * than balance. Increases the balance of another BankAccount object
+     * @throws InsufficientFundsException if balance is less than amount
+     */
+    public void transfer(double amount, BankAccount account) throws InsufficientFundsException{
+        if(isNumberValid(amount)){
+            withdraw(amount);
+            account.deposit(amount);
+        }
+        else{
+            throw new IllegalArgumentException("Amount to withdraw is invalid");
+        }
+    }
+    /**
+     * @post increases the balance by amount if amount is non-negative 
+     */
+    public void deposit(double amount){
+        if(isNumberValid(amount)){
+            balance+=amount;
+            balance = Math.round(balance * 100.0) / 100.0;
+        }
+        else{
+            throw new IllegalArgumentException("Amount to deposit is invalid");
         }
     }
 
-
+    /**
+     * @post increases the balance by amount if amount is non-negative 
+     */
     public static boolean isEmailValid(String email){
-        if (email.indexOf('@') == -1){
+        Boolean valid = true;
+        String prefix = email.split("@")[0].toString();
+
+        if (prefix == "") {
             return false;
         }
-        else {
+
+        if (prefix.startsWith(".") || prefix.startsWith("!") || prefix.startsWith("#") || prefix.startsWith("'")) {
+            return false;
+        }
+
+        if (prefix.contains("@")) {
+            return false;
+        }
+
+        if (prefix.endsWith("-")) {
+            return false;
+        }        
+
+        if (prefix.contains("#")) {
+            return false;
+        }
+    
+        if (email.indexOf('@') == -1){
+            return false;
+        } 
+
+        if (email.endsWith("@")) {
+            return false;
+        }
+
+        //check domain
+        String domain = email.split("@")[1].toString();
+
+        if (!domain.contains(".")) {
+            return false;
+        }
+
+        if (domain.contains("@")) {
+            return false;
+        }
+
+        if (domain == "") {
+            return false;
+        }
+        
+        String domainLastPortion = domain.split("\\.")[1].toString();
+        if (domain.contains("#") || domain.contains("'")) {
+            return false;
+        }
+
+        if (domainLastPortion.length() < 2) {
+            return false;
+        }
+
+        return valid;
+    }
+    public static boolean isNumberValid(double num){
+        if (num<0){
+            return false;
+        }
+        String numString = Double.toString(num);
+        int decimalIndex = numString.indexOf(".");
+        int decimalPlaces = numString.length() - decimalIndex - 1;
+        if(decimalPlaces>2){
+            return false;
+        }
+        else{
             return true;
         }
     }
